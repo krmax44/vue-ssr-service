@@ -1,0 +1,8 @@
+{
+  "basic.ts": {
+    "isEntry": true,
+    "name": "testComponent",
+    "file": "basic.ts",
+    "src:": "basic.ts"
+  }
+}

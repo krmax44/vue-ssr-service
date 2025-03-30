@@ -1,0 +1,68 @@
+{
+  "name": "vue-ssr-service",
+  "version": "0.1.0",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    },
+    "./vite": {
+      "import": "./dist/vite.js",
+      "types": "./dist/vite.d.ts"
+    },
+    "./entry": {
+      "import": "./dist/entry.js",
+      "types": "./dist/entry.d.ts"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "bin": "./dist/cli.js",
+  "type": "module",
+  "scripts": {
+    "start": "bun run src/cli.ts",
+    "test": "vitest",
+    "build": "tsup",
+    "prepack": "tsup"
+  },
+  "dependencies": {
+    "@hono/node-server": "^1.14.0",
+    "@hono/zod-validator": "^0.4.3",
+    "commander": "^13.1.0",
+    "hono": "^4.7.5",
+    "zod": "^3.24.2"
+  },
+  "devDependencies": {
+    "@happy-dom/global-registrator": "^17.4.4",
+    "@types/bun": "latest",
+    "@vitest/coverage-v8": "3.0.9",
+    "prettier": "^3.5.3",
+    "tsup": "^8.4.0",
+    "typescript": "^5.8.2",
+    "vite": "^6.2.3",
+    "vitest": "^3.0.9"
+  },
+  "peerDependencies": {
+    "vue": "^3"
+  },
+  "engines": {
+    "bun": ">=1.2.4",
+    "node": ">=22.0.0"
+  },
+  "prettier": {},
+  "tsup": {
+    "entry": [
+      "src/index.ts",
+      "src/vite.ts",
+      "src/cli.ts",
+      "src/entry.ts"
+    ],
+    "format": [
+      "esm"
+    ],
+    "dts": true,
+    "sourcemap": true,
+    "clean": true
+  }
+}
