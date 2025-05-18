@@ -2,6 +2,8 @@ FROM oven/bun:1-alpine AS build
 
 WORKDIR /usr/src/app
 
+VOLUME [ "/var/assets" ]
+
 COPY package.json bun.lock ./
 
 RUN bun install --frozen-lockfile --production
@@ -16,6 +18,6 @@ COPY ./src ./src
 
 ENV NODE_ENV=production
 
-CMD ["bun", "start", "--port", "3123"]
+CMD ["bun", "start", "--port", "3123", "--host", "0.0.0.0", "/var/assets/manifest.json"]
 
 EXPOSE 3123
