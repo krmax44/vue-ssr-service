@@ -3,6 +3,7 @@ import path from "node:path";
 import { renderToWebStream } from "vue/server-renderer";
 import { VueSSRApp } from ".";
 import { RenderError, type Context } from "./utils";
+import { logger } from "./logger";
 
 type ManifestFile = Record<
   string,
@@ -45,7 +46,7 @@ export class Manifest {
 }
 
 async function importSSRApp(entryPath: string): Promise<any> {
-  /* @vite-ignore */
+  /** @vite-ignore */
   return (await import(entryPath))?.ssrApp;
 }
 
@@ -58,6 +59,7 @@ export async function importApp(
   try {
     ssrApp = await importFactory(entryPath);
   } catch (error) {
+    logger.error(error);
     throw new RenderError(
       `Could not import the entry module at ${entryPath}. Does it exist?`,
     );

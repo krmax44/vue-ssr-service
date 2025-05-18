@@ -1,13 +1,10 @@
-#!/usr/bin/env node
-
 import { Command } from "commander";
-import { serve, type ServerType } from "@hono/node-server";
-import { importApp, renderApp, Manifest } from "./render";
-import createServer from "./server";
+import { importApp, renderApp } from "./render";
+import { startServer } from "./server";
 import { readStream } from "./utils";
+import { logger } from "./logger";
 
 export const program = new Command();
-export let server: Bun.Server | ServerType;
 
 program
   .name("vue-ssr-service")
@@ -20,33 +17,11 @@ program
     "Socket to run the server on (overrides host and port)",
     "",
   )
+  .option("--log-level <string>", "Log level", "info")
   .version("0.1.0")
-  .action(async (manifestPath, { port, host, socket }) => {
-    const manifest = await new Manifest(manifestPath).loadManifest();
-
-    const app = createServer(manifest);
-
-    const isBun = (process.versions as any).bun !== undefined;
-    if (socket) {
-      if (isBun) {
-        server = Bun.serve({ fetch: app.fetch, unix: socket });
-      } else {
-        server = serve({
-          fetch: app.fetch,
-          port: socket,
-        });
-      }
-
-      console.log(`Server running at unix://${socket}`);
-    } else {
-      if (isBun) {
-        server = Bun.serve({ fetch: app.fetch, port, hostname: host });
-      } else {
-        server = serve({ fetch: app.fetch, port, hostname: host });
-      }
-
-      console.log(`Server running at http://${host}:${port}`);
-    }
+  .action(async (manifestPath, { port, host, socket, logLevel }) => {
+    logger.level = logLevel;
+    await startServer(manifestPath, { port, host, socket });
   });
 
 program
@@ -54,7 +29,9 @@ program
   .description("Renders to stdout and exits.")
   .argument("<entry>", "Entry point to the SSR app")
   .option("--context <string>", "JSON Context to pass to the app")
+  .option("--log-level <string>", "Log level", "info")
   .action(async (entry, options) => {
+    logger.level = options.logLevel;
     const context = options.context ? JSON.parse(options.context) : {};
 
     const app = await importApp(entry);
@@ -63,4 +40,4 @@ program
     await readStream(stream, (data) => process.stdout.write(data));
   });
 
-if (import.meta.main) program.parse();
+program.parse();
