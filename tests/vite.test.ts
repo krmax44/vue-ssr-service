@@ -1,7 +1,7 @@
 import { describe, it, expect, beforeAll, afterAll } from "vitest";
 import { resolve } from "node:path";
 import { createServer } from "vite";
-import { ssrPlugin } from "../src";
+import { ssrPlugin } from "../src/vite";
 import { beforeEach } from "node:test";
 
 const port = 7454;
@@ -48,7 +48,7 @@ describe("Vite Dev Server", () => {
   it("handles valid requests", async () => {
     const res1 = await request({
       entryName: "basic",
-      context: { msg: "Hello, world!" },
+      props: { msg: "Hello, world!" },
     });
 
     expect(res1.status).toBe(200);
@@ -56,7 +56,7 @@ describe("Vite Dev Server", () => {
 
     const res2 = await request({
       entryName: "testComponent",
-      context: { msg: "Hello, world!" },
+      props: { msg: "Hello, world!" },
     });
 
     expect(res2.status).toBe(200);
@@ -75,7 +75,7 @@ describe("Vite Dev Server", () => {
 
     const res5 = await request({
       entryName: "nonExistent",
-      context: {},
+      props: {},
     });
     expect(res5.status).toBe(400);
   });

@@ -6,13 +6,21 @@
       "import": "./dist/index.js",
       "types": "./dist/index.d.ts"
     },
+    "./client": {
+      "import": "./dist/client.js",
+      "types": "./dist/client.d.ts"
+    },
     "./vite": {
       "import": "./dist/vite.js",
       "types": "./dist/vite.d.ts"
     },
-    "./entry": {
-      "import": "./dist/entry.js",
-      "types": "./dist/entry.d.ts"
+    "./render": {
+      "import": "./dist/render.js",
+      "types": "./dist/render.d.ts"
+    },
+    "./server": {
+      "import": "./dist/server.js",
+      "types": "./dist/server.d.ts"
     }
   },
   "files": [
@@ -23,6 +31,7 @@
   "scripts": {
     "start": "bun run src/cli.ts",
     "test": "vitest",
+    "typecheck": "tsc --noEmit",
     "build": "tsup",
     "prepack": "tsup"
   },
@@ -31,12 +40,13 @@
     "@hono/zod-validator": "^0.4.3",
     "commander": "^13.1.0",
     "hono": "^4.7.5",
+    "pino": "^9.6.0",
     "zod": "^3.24.2"
   },
   "devDependencies": {
-    "@happy-dom/global-registrator": "^17.4.4",
-    "@types/bun": "latest",
+    "@types/bun": "^1.2.13",
     "@vitest/coverage-v8": "3.0.9",
+    "happy-dom": "^17.4.7",
     "prettier": "^3.5.3",
     "tsup": "^8.4.0",
     "typescript": "^5.8.2",
@@ -50,13 +60,14 @@
     "bun": ">=1.2.4",
     "node": ">=22.0.0"
   },
-  "prettier": {},
   "tsup": {
     "entry": [
       "src/index.ts",
+      "src/client.ts",
       "src/vite.ts",
       "src/cli.ts",
-      "src/entry.ts"
+      "src/server.ts",
+      "src/render.ts"
     ],
     "format": [
       "esm"

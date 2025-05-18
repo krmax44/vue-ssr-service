@@ -10,7 +10,7 @@ export function createServer(manifest: Manifest) {
   const app = new Hono();
 
   app.post("/render", zValidator("json", requestSchema), async (c) => {
-    const { entryName, context } = c.req.valid("json");
+    const { entryName, props } = c.req.valid("json");
 
     try {
       const ssrApp = manifest.getEntryPath(entryName);
@@ -18,7 +18,7 @@ export function createServer(manifest: Manifest) {
         throw new RenderError("Entry not found in manifest");
       }
 
-      const stream = await renderApp(ssrApp, context);
+      const stream = await renderApp(ssrApp, props);
 
       return c.newResponse(stream, 200, {
         "Content-Type": "text/html",

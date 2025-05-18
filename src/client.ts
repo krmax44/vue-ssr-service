@@ -1,5 +1,5 @@
 import { createSSRApp, type App, type Component } from "vue";
-export type Context = Record<string, unknown>;
+export type RootProps = Record<string, unknown>;
 
 export class VueSSRApp {
   public app?: App<Element>;
@@ -26,10 +26,10 @@ export class VueSSRApp {
   ) {}
 
   public async createApp(
-    context: Context,
+    props: RootProps,
     factory = createSSRApp,
   ): Promise<App<Element>> {
-    const app = factory(this.rootComponent, context);
+    const app = factory(this.rootComponent, props);
 
     if (this.configureApp) {
       this.configureApp(app);
@@ -60,14 +60,14 @@ export class VueSSRApp {
       );
 
       const json = jsonElement ? JSON.parse(jsonElement.innerHTML) : {};
-      const context = json?.context || {};
+      const props = json?.props || {};
       const forceClientRender = json?.forceClientRender || false;
 
       if (forceClientRender) {
         const { createApp } = await import("vue");
-        this.app = await this.createApp(context, createApp);
+        this.app = await this.createApp(props, createApp);
       } else {
-        this.app = await this.createApp(context);
+        this.app = await this.createApp(props);
       }
 
       jsonElement?.remove();

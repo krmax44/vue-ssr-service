@@ -2,11 +2,11 @@ import { z } from "zod";
 
 export class RenderError extends Error {}
 
-export type Context = Record<string, unknown>;
+export type RootProps = Record<string, unknown>;
 
 export const requestSchema = z.object({
   entryName: z.string(),
-  context: z.record(z.string(), z.unknown()),
+  props: z.record(z.string(), z.unknown()),
 });
 
 /**

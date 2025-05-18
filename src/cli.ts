@@ -28,14 +28,14 @@ program
   .command("render")
   .description("Renders to stdout and exits.")
   .argument("<entry>", "Entry point to the SSR app")
-  .option("--context <string>", "JSON Context to pass to the app")
+  .option("--props <string>", "Root props (JSON) to pass to the app")
   .option("--log-level <string>", "Log level", "info")
   .action(async (entry, options) => {
     logger.level = options.logLevel;
-    const context = options.context ? JSON.parse(options.context) : {};
+    const props = options.props ? JSON.parse(options.props) : {};
 
     const app = await importApp(entry);
-    const stream = await renderApp(app, context);
+    const stream = await renderApp(app, props);
 
     await readStream(stream, (data) => process.stdout.write(data));
   });

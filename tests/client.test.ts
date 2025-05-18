@@ -3,7 +3,7 @@ import { nextTick } from "vue";
 import { prepareBody } from "./test-utils";
 import { VueSSRApp } from "../src";
 
-const context = { msg: "Hello, world!" };
+const props = { msg: "Hello, world!" };
 
 const { ssrApp: basicApp, component: basicComponent } = await import(
   "./fixtures/basic"
@@ -20,7 +20,7 @@ describe("SSR Client Tests", () => {
   it("renders basic app correctly", async () => {
     expect.assertions(1);
 
-    prepareBody(context, "<div>Hello, world!</div>");
+    prepareBody(props, "<div>Hello, world!</div>");
 
     await basicApp.mount("test-component");
 
@@ -46,7 +46,7 @@ describe("SSR Client Tests", () => {
   it("detects hydration mismatches", async () => {
     expect.assertions(1);
 
-    prepareBody(context, "<div>Bar</div>");
+    prepareBody(props, "<div>Bar</div>");
     const errorSpy = vi.spyOn(console, "error").mockImplementation(() => {});
     const warnSpy = vi.spyOn(console, "warn").mockImplementation(() => {});
 
@@ -77,7 +77,7 @@ describe("SSR Client Tests", () => {
 
   it("allows configuring the app", async () => {
     expect.assertions(1);
-    prepareBody(context, "<div>Hello, world!</div>");
+    prepareBody(props, "<div>Hello, world!</div>");
 
     const configureApp = vi.fn((app) => {
       app.config.globalProperties.$customProperty = "test";
@@ -94,7 +94,7 @@ describe("SSR Client Tests", () => {
   it("throws error when no element exists", async () => {
     expect.assertions(1);
 
-    prepareBody(context, "<div>Hello, world!</div>");
+    prepareBody(props, "<div>Hello, world!</div>");
 
     await expect(basicApp.mount("#non-existent")).rejects.toThrow(
       "No elements with selector",
@@ -104,7 +104,7 @@ describe("SSR Client Tests", () => {
   it("re-renders the app when forceClientRender is true", async () => {
     expect.assertions(2);
 
-    document.body.innerHTML = `<test-component><script type="application/json">${JSON.stringify({ context, forceClientRender: true })}</script></test-component>`;
+    document.body.innerHTML = `<test-component><script type="application/json">${JSON.stringify({ props, forceClientRender: true })}</script></test-component>`;
 
     await basicApp.mount("test-component");
 

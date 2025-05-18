@@ -1,3 +1,2 @@
-export { ssrPlugin } from "./vite";
-export { VueSSRApp } from "./entry";
-export { type Context } from "./utils";
+export { VueSSRApp } from "./client";
+export { type RootProps } from "./utils";

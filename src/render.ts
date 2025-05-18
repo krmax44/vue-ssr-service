@@ -2,7 +2,7 @@ import fs from "node:fs/promises";
 import path from "node:path";
 import { renderToWebStream } from "vue/server-renderer";
 import { VueSSRApp } from ".";
-import { RenderError, type Context } from "./utils";
+import { RenderError, type RootProps } from "./utils";
 import { logger } from "./logger";
 
 type ManifestFile = Record<
@@ -83,8 +83,8 @@ export async function importApp(
 
 export async function renderApp(
   ssrApp: VueSSRApp,
-  context: Context,
+  props: RootProps,
 ): Promise<ReadableStream<any>> {
-  const app = await ssrApp.createApp(context);
+  const app = await ssrApp.createApp(props);
   return renderToWebStream(app);
 }

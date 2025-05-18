@@ -43,7 +43,7 @@ export const ssrPlugin = (): Plugin => ({
           return res.end(JSON.stringify(error));
         }
 
-        let { entryName, context } = data;
+        let { entryName, props } = data;
 
         if (inputs[entryName]) {
           entryName = inputs[entryName];
@@ -61,7 +61,7 @@ export const ssrPlugin = (): Plugin => ({
           return res.end((e as Error).message);
         }
 
-        const stream = await renderApp(ssrApp, context);
+        const stream = await renderApp(ssrApp, props);
 
         res.writeHead(200, { "Content-Type": "text/html" });
 

@@ -24,7 +24,7 @@ describe("endpoints", () => {
     // Test valid request with "basic.ts"
     const res1 = await request({
       entryName: "basic.ts",
-      context: {
+      props: {
         msg: "Hello, World!",
       },
     });
@@ -35,7 +35,7 @@ describe("endpoints", () => {
     // Test valid request with "testComponent"
     const res2 = await request({
       entryName: "testComponent",
-      context: {
+      props: {
         msg: "Hello, World!",
       },
     });
@@ -46,7 +46,7 @@ describe("endpoints", () => {
     // Test invalid request with non-existent entry
     const res3 = await request({
       entryName: "nonExistent.ts",
-      context: {},
+      props: {},
     });
 
     expect(res3.status).toBe(400);
@@ -69,7 +69,7 @@ describe("real server", () => {
       },
       body: JSON.stringify({
         entryName: "basic.ts",
-        context: { msg: "Hello, world!" },
+        props: { msg: "Hello, world!" },
       }),
     });
 
@@ -91,7 +91,7 @@ describe("real server", () => {
       const client = net.createConnection({ path: socket }, () => {
         const body = JSON.stringify({
           entryName: "testComponent",
-          context: { msg: "Hello, world!" },
+          props: { msg: "Hello, world!" },
         });
 
         client.write(

@@ -1,9 +1,9 @@
-import { Context } from "../src";
+import { type RootProps } from "../src";
 
 export function prepareBody(
-  context: Context,
+  props: RootProps,
   inner: string,
   tag = "test-component",
 ) {
-  document.body.innerHTML = `<${tag}><script type="application/json">${JSON.stringify({ context })}</script>${inner}</${tag}>`;
+  document.body.innerHTML = `<${tag}><script type="application/json">${JSON.stringify({ props })}</script>${inner}</${tag}>`;
 }

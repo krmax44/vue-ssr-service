@@ -3,7 +3,7 @@ import path from "node:path";
 import { renderApp, importApp } from "../src/render";
 import { readableStreamToString } from "../src/utils";
 
-const context = { msg: "Hello, world!" };
+const props = { msg: "Hello, world!" };
 
 describe("SSR Render Tests", () => {
   it("renders basic app correctly", async () => {
@@ -11,7 +11,7 @@ describe("SSR Render Tests", () => {
 
     const entryPath = path.join(__dirname, "fixtures/basic.ts");
     const ssrApp = await importApp(entryPath);
-    const stream = await renderApp(ssrApp, context);
+    const stream = await renderApp(ssrApp, props);
 
     const result = await readableStreamToString(stream);
 
