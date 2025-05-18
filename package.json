@@ -31,6 +31,7 @@
   "scripts": {
     "start": "bun run src/cli.ts",
     "test": "vitest",
+    "test:coverage": "vitest --coverage",
     "typecheck": "tsc --noEmit",
     "build": "tsup",
     "prepack": "tsup"
