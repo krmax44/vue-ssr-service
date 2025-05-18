@@ -2,18 +2,28 @@ import { describe, it, expect, beforeAll, afterAll } from "vitest";
 import { resolve } from "node:path";
 import { createServer } from "vite";
 import { ssrPlugin } from "../src";
+import { beforeEach } from "node:test";
 
 const port = 7454;
 const url = `http://localhost:${port}/__vue-ssr`;
-const request = (body: any) =>
-  fetch(url, {
+
+const request = (body: any) => {
+  // workaround for happy-dom fetch cors error in node.js
+  window.location.href = url;
+  return fetch(url, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(body),
   });
+};
 
 describe("Vite Dev Server", () => {
   let server: any;
+
+  beforeEach(() => {
+    // workaround for happy-dom fetch cors error in node.js
+    window.location.href = url;
+  });
 
   beforeAll(async () => {
     server = await createServer({
@@ -54,6 +64,7 @@ describe("Vite Dev Server", () => {
   });
 
   it("handles invalid requests", async () => {
+    console.log("w", window.location.href);
     const res3 = await fetch(url, {
       method: "GET",
     });

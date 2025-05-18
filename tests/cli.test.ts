@@ -1,6 +1,7 @@
 // test the render command
 import { describe, it, expect, vi } from "vitest";
 import { resolve } from "node:path";
+import fs from "node:fs/promises";
 import { program, server } from "../src/cli";
 import net from "node:net";
 
@@ -46,10 +47,8 @@ describe("CLI Tests", () => {
       },
     );
 
-    await new Promise<void>((r) => {
+    await new Promise<void>((resolve, reject) => {
       const client = net.createConnection({ path: socket }, () => {
-        console.log("CONNECTED");
-
         const body = JSON.stringify({
           entryName: "testComponent",
           context: { msg: "Hello, world!" },
@@ -76,8 +75,19 @@ describe("CLI Tests", () => {
         s.close?.();
         s.stop?.();
 
-        r();
+        resolve();
       });
+
+      client.on("error", (err) => {
+        console.error("Error:", err);
+        const s = server as any;
+        s.close?.();
+        s.stop?.();
+
+        reject();
+      });
+    }).finally(() => {
+      fs.unlink(socket).catch(() => {});
     });
   });
 

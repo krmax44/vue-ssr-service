@@ -47,15 +47,17 @@ describe("SSR Client Tests", () => {
     expect.assertions(1);
 
     prepareBody(context, "<div>Bar</div>");
-    const spy = vi.spyOn(console, "error");
+    const errorSpy = vi.spyOn(console, "error").mockImplementation(() => {});
+    const warnSpy = vi.spyOn(console, "warn").mockImplementation(() => {});
 
     await basicApp.mount("test-component");
 
-    expect(spy).toHaveBeenCalledWith(
+    expect(errorSpy).toHaveBeenCalledWith(
       "Hydration completed but contains mismatches.",
     );
 
-    spy.mockRestore();
+    errorSpy.mockRestore();
+    warnSpy.mockRestore();
   });
 
   it("handles interactive app updates", async () => {
@@ -94,7 +96,7 @@ describe("SSR Client Tests", () => {
 
     prepareBody(context, "<div>Hello, world!</div>");
 
-    expect(basicApp.mount("#non-existent")).rejects.toThrow(
+    await expect(basicApp.mount("#non-existent")).rejects.toThrow(
       "No elements with selector",
     );
   });
