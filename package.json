@@ -74,8 +74,29 @@
   },
   "prettier": {},
   "release": {
+    "branches": [
+      "main"
+    ],
     "plugins": [
-      "semantic-release-gitmoji",
+      [
+        "semantic-release-gitmoji",
+        {
+          "releaseRules": {
+            "major": [
+              "💥"
+            ],
+            "minor": [
+              "✨"
+            ],
+            "patch": [
+              "🐛",
+              "🩹",
+              "🚑",
+              "🔒️"
+            ]
+          }
+        }
+      ],
       "@semantic-release/github",
       "@semantic-release/npm"
     ]
