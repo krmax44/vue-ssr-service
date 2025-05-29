@@ -11,8 +11,8 @@ type ManifestFile = Record<
 >;
 
 export class Manifest {
-  public entriesByName: Map<string, VueSSRApp> = new Map();
-  public entriesBySrc: Map<string, VueSSRApp> = new Map();
+  private entriesByName: Map<string, VueSSRApp> = new Map();
+  private entriesBySrc: Map<string, VueSSRApp> = new Map();
 
   constructor(public manifestPath: string) {}
 
