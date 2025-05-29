@@ -35,7 +35,7 @@ export default defineConfig({
   // the ssrPlugin is only used during development
   plugins: [vue(), ssrPlugin()],
   build: {
-    manifest: "manifest.json", // required when using the service in production
+    manifest: "manifest.json", // required to load the built assets in production
     rollupOptions: {
       input: {
         // heads-up: Vite will no longer scan the index.html for entries
@@ -77,7 +77,7 @@ We'll change it as follows:
 import { VueSSRApp } from "vue-ssr-service/entry";
 import MyApp from "./components/MyApp.vue";
 
-// the vue-ssr-service will grab this export to render it!
+// vue-ssr-service will grab this export to render it!
 export const ssrApp = new VueSSRApp(MyApp, (app) => {
   app.use(/* ... */);
 });
@@ -97,7 +97,7 @@ defineProps<{ name: string }>();
 </template>
 ```
 
-Now, let's adjust the build command, and then build the app using `npm run build`:
+Now, let's adjust the `build` command, and then build the app using `npm run build`:
 
 ```diff
 // package.json
@@ -139,7 +139,7 @@ Let's see if it works:
 
 ```sh
 $ curl "localhost:3123/render" \
-    -d '{"entryName": "myApp", "context": { "name":"friend" } }' \
+    -d '{"entryName": "myApp", "props": { "name":"friend" } }' \
     -X POST \
     -H "Content-Type: application/json"
 
@@ -152,7 +152,7 @@ Next, take a look at integrating it into your backend.
 
 First, your backend needs to be able to serve the assets built by Vite, i.e. include the scripts and styles in the HTML templates. During development, it's also nice to have Vite's Hot Module Replacement script included. There possibly are tools for your web framework already out there to help you with this, for example [django-vite](https://github.com/MrBin99/django-vite).
 
-Next, the backend views need to be connected to `vue-ssr-service`, i.e. request the server-side rendered app with the corresponding context. Your view template might roughly look like this:
+Next, the backend views need to be connected to `vue-ssr-service`, i.e. request the server-side rendered app with the corresponding props. Your view template might roughly look like this:
 
 ```html
 <script src="./path/to/myapp.js"></script>
@@ -163,7 +163,7 @@ Next, the backend views need to be connected to `vue-ssr-service`, i.e. request 
 
 It will have to be adapted in two ways:
 
-1. A `<script>` element containing JSON serialized context data needs to be added as the first child of the root element. If there is no context to pass, it may be omitted.
+1. A `<script type="application/json">` element containing JSON serialized data, including props, needs to be added as the first child of the root element. If there are no props to pass, it may be omitted.
 2. The backend requests the SSR-rendered app from `vue-ssr-service` and inserts the resulting HTML right after.
 
 > [!IMPORTANT]
@@ -176,9 +176,9 @@ It will have to be adapted in two ways:
 <script src="./path/to/myapp.js"></script>
 
 <div id="app">
-  <!-- whitespace added for readability - all whitespace to be removed to hydrate properly though! -->
+  <!-- whitespace added for readability - all whitespace needs to be removed to hydrate properly though! -->
   <script type="application/json">
-    { "context": { "name": "friend" } }
+    { "props": { "name": "friend" } }
   </script>
   <p>Hello, friend!</p>
 </div>
@@ -188,17 +188,17 @@ It will have to be adapted in two ways:
 
 ### Error Handling
 
-Should `vue-ssr-service` not be able to render the app, `forceClientRender` in the JSON context should be set to `true`. The client will then mount the app as if it was not in SSR mode.
+Should `vue-ssr-service` not be able to render the app, `forceClientRender` in the JSON props should be set to `true`. The client will then mount the app as if it was not in SSR mode.
 
 > [!WARNING]
-> Client re-renders come at a performance penalty. Make sure to carefully monitor for any SSR errors.
+> Client re-renders may come at a performance penalty. Make sure to carefully monitor for any SSR errors.
 
 ```html
 <script src="./path/to/myapp.js"></script>
 
 <div id="app">
   <script type="application/json">
-    { "context": { "name": "friend" }, "forceClientRender": true }
+    { "props": { "name": "friend" }, "forceClientRender": true }
   </script>
   <!-- oops, ssr failed! -->
 </div>
@@ -255,8 +255,8 @@ Commands:
 
 Request body (JSON):
 
-- `entryName`: Either the filename or the name of the entry(key/value in Vite's `build.rollupOptions.input`)
-- `context`: The context which will be passed as props to the root component
+- `entryName`: Either name or filename of the entry (`src`/`file` key in `manifest.json`)
+- `props`: Data which will be passed as props to the root component
 
 Response:
 
