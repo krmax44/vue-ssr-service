@@ -42,8 +42,8 @@ export class VueSSRApp {
    * Mounts the app to the provided element.
    * In SSR mode, it will do nothing.
    */
-  public async mount(selector: Element | string) {
-    if (!import.meta.env.SSR) {
+  public async mount(selector: Element | string): Promise<void> {
+    if (!import.meta.env?.SSR) {
       let element;
       if (typeof selector === "string") {
         element = document.querySelector<Element>(selector);
