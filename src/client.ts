@@ -43,7 +43,7 @@ export class VueSSRApp {
    * In SSR mode, it will do nothing.
    */
   public async mount(selector: Element | string): Promise<void> {
-    if (!import.meta.env?.SSR) {
+    if ((import.meta?.env as any)?.SSR === false) {
       let element;
       if (typeof selector === "string") {
         element = document.querySelector<Element>(selector);
