@@ -1,6 +1,11 @@
 # Vue SSR service
 
+[![NPM Version](https://img.shields.io/npm/v/vue-ssr-service)](https://www.npmjs.com/package/vue-ssr-service)
+
 A fast microservice to render server-side render Vue components. It's designed for use with non-JavaScript web servers, such as Django, Ruby on Rails etc. Works great with Vite.
+
+> [!WARNING]
+> This project is in a proof-of-concept state.
 
 ## Getting started with Vite
 
@@ -206,13 +211,6 @@ Should `vue-ssr-service` not be able to render the app, `forceClientRender` in t
 
 ## Installation
 
-With Docker:
-
-```sh
-docker build -t vue-ssr-service .
-docker run -t vue-ssr-service -p 3000:3000
-```
-
 With Bun or Node.js:
 
 ```sh
@@ -225,6 +223,8 @@ bun start
 npm install
 npm start
 ```
+
+With Docker: (coming soon)
 
 ## Usage
 
@@ -261,3 +261,7 @@ Request body (JSON):
 Response:
 
 - The rendered component as HTML.
+
+## Related Projects
+
+- [Python/Django client](https://github.com/krmax44/vue-ssr-python/) for `vue-ssr-service`
