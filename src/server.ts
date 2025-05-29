@@ -20,6 +20,8 @@ export function createServer(manifest: Manifest) {
 
       const stream = await renderApp(ssrApp, props);
 
+      logger.debug(`Rendered ${entryName}`);
+
       return c.newResponse(stream, 200, {
         "Content-Type": "text/html",
       });
@@ -53,7 +55,13 @@ export async function startServer(
   options: ServerOptions = {},
 ): Promise<Server | void> {
   let server: Server;
-  const manifest = await new Manifest(manifestPath).loadManifest();
+  let manifest: Manifest;
+
+  try {
+    manifest = await new Manifest(manifestPath).loadManifest();
+  } catch (error) {
+    return logger.error(error);
+  }
 
   const app = createServer(manifest);
 
