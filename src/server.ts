@@ -1,10 +1,10 @@
 import { Hono } from "hono";
 import { serve, type ServerType } from "@hono/node-server";
 import { zValidator } from "@hono/zod-validator";
-import { Manifest, renderApp } from "./render";
+import { Manifest, renderApp } from "./render.js";
 import { HTTPException } from "hono/http-exception";
-import { RenderError, requestSchema } from "./utils";
-import { logger } from "./logger";
+import { RenderError, requestSchema } from "./utils.js";
+import { logger } from "./logger.js";
 
 export function createServer(manifest: Manifest) {
   const app = new Hono();
@@ -51,7 +51,7 @@ interface ServerOptions {
 export async function startServer(
   manifestPath: string,
   options: ServerOptions = {},
-): Promise<Server> {
+): Promise<Server | void> {
   let server: Server;
   const manifest = await new Manifest(manifestPath).loadManifest();
 
@@ -64,9 +64,9 @@ export async function startServer(
     if (isBun) {
       server = Bun.serve({ fetch: app.fetch, unix: socket });
     } else {
-      server = (serve as any)({
+      server = serve({
         fetch: app.fetch,
-        port: socket,
+        port: socket as any,
       });
     }
 

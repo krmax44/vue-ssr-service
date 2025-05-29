@@ -1,8 +1,8 @@
 import { Command } from "commander";
-import { importApp, renderApp } from "./render";
-import { startServer } from "./server";
-import { readStream } from "./utils";
-import { logger } from "./logger";
+import { importApp, renderApp } from "./render.js";
+import { startServer } from "./server.js";
+import { readStream } from "./utils.js";
+import { logger } from "./logger.js";
 
 export const program = new Command();
 

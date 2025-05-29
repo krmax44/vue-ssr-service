@@ -1,4 +1,4 @@
-import { VueSSRApp } from "../../src";
+import { VueSSRApp } from "vue-ssr-service/client";
 
 export const component = {
   props: {

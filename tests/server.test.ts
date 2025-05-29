@@ -1,4 +1,4 @@
-import { describe, it, expect, vi } from "vitest";
+import { describe, it, expect } from "vitest";
 import path, { resolve } from "node:path";
 import fs from "node:fs/promises";
 import net from "node:net";

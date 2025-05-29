@@ -1,6 +1,6 @@
-import type { Plugin } from "vite";
-import { readStream, requestSchema } from "./utils";
-import { importApp, renderApp } from "./render";
+import { type Plugin } from "vite";
+import { readStream, requestSchema } from "./utils.js";
+import { importApp, renderApp } from "./render.js";
 
 let inputs: Record<string, string> = {};
 
@@ -32,7 +32,7 @@ export const ssrPlugin = (): Plugin => ({
 
         try {
           jsonData = JSON.parse(body);
-        } catch (error) {
+        } catch {
           res.statusCode = 400;
           return res.end("Invalid JSON");
         }
@@ -43,7 +43,8 @@ export const ssrPlugin = (): Plugin => ({
           return res.end(JSON.stringify(error));
         }
 
-        let { entryName, props } = data;
+        let { entryName } = data;
+        const { props } = data;
 
         if (inputs[entryName]) {
           entryName = inputs[entryName];

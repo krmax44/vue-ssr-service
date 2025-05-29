@@ -18,7 +18,7 @@ export const requestSchema = z.object({
 export async function readStream(
   stream: ReadableStream<any>,
   write: (data: string) => void,
-) {
+): Promise<void> {
   const reader = stream.getReader();
   const decoder = new TextDecoder("utf-8");
 

@@ -1,9 +1,9 @@
 import fs from "node:fs/promises";
 import path from "node:path";
 import { renderToWebStream } from "vue/server-renderer";
-import { VueSSRApp } from ".";
-import { RenderError, type RootProps } from "./utils";
-import { logger } from "./logger";
+import { VueSSRApp } from "./client.js";
+import { RenderError, type RootProps } from "./utils.js";
+import { logger } from "./logger.js";
 
 type ManifestFile = Record<
   string,
@@ -21,7 +21,7 @@ export class Manifest {
     try {
       const manifestJson = await fs.readFile(this.manifestPath, "utf-8");
       manifest = JSON.parse(manifestJson) as ManifestFile;
-    } catch (error) {
+    } catch {
       throw new Error(
         `Could not load JSON manifest file at ${this.manifestPath}.`,
       );
@@ -46,7 +46,7 @@ export class Manifest {
 }
 
 async function importSSRApp(entryPath: string): Promise<any> {
-  /** @vite-ignore */
+  /* @vite-ignore */
   return (await import(entryPath))?.ssrApp;
 }
 
